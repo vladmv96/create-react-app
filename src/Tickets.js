@@ -30,7 +30,6 @@ const styles = theme => ({
     },
 });
 
-
 class Tickets extends Component {
     constructor(props) {
         super(props);

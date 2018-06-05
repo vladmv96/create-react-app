@@ -11,13 +11,19 @@
     "react": "^16.3.2",
     "react-bootstrap": "^0.32.1",
     "react-dom": "^16.3.2",
+<<<<<<< HEAD
     "react-js-pagination": "^3.0.2",
     "react-popup": "^0.9.3",
+=======
+>>>>>>> 5ec78a79afe9323f91feb9795078ec89c008e990
     "react-redux": "^5.0.7",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
     "react-scripts": "1.1.4",
+<<<<<<< HEAD
     "reactjs-popup": "^1.1.1",
+=======
+>>>>>>> 5ec78a79afe9323f91feb9795078ec89c008e990
     "redux": "^4.0.0",
     "redux-thunk": "^2.3.0"
   },
