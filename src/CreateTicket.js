@@ -39,6 +39,10 @@ class CreateTicket extends Component {
         }
     }
 
+    Chit = () => {
+        this.setState({name : 'Darova', phone : '+79651840329', email : 'test@test.ru'});
+    }
+
     handleUserInput = (e) => {
         const name = e.target.name;
         const value = e.target.value;
@@ -49,7 +53,7 @@ class CreateTicket extends Component {
     createNewTicket = () => {
         let { name, phone, email } = this.state;
         this.setState({ name: '', phone: '', email: '' });
-
+        
         axios({
             url: `https://api.evys.ru/admin2/project/${this.props.id}/tickets`,
             method: 'post',

@@ -16,12 +16,13 @@ import Paper from '@material-ui/core/Paper';
 import AddIcon from '@material-ui/icons/Add';
 import Popup from 'reactjs-popup';
 import CreateTicket from './CreateTicket';
-import { saveStatuses} from './actions/auth_actions';
+import { saveStatuses } from './actions/auth_actions';
+import Pagination from "react-js-pagination";
 
 
 const styles = theme => ({
     root: {
-        width: '70%',
+        width: '80%',
         marginLeft: 'auto',
         marginRight: 'auto',
         marginTop: theme.spacing.unit * 3,
@@ -29,11 +30,14 @@ const styles = theme => ({
     },
 });
 
+
 class Tickets extends Component {
     constructor(props) {
         super(props);
         this.state = {
             tickets: '',
+            activePage: 1,
+            count: ''
         }
     }
 
@@ -50,6 +54,7 @@ class Tickets extends Component {
         this.getTickets();
         this.getStatuses();
         console.log(this.props.statuses);
+        console.log(this.state.count);
     }
 
     renderItem = (item, index) => {
@@ -63,18 +68,24 @@ class Tickets extends Component {
         )
     }
 
+    handlePageChange = (pageNumber) => {
+        console.log(`active page is ${pageNumber}`);
+        this.setState({ 'activePage' : pageNumber }, () => {
+            this.getTickets()
+        });
+      }
+
     getStatuses = () => {
         axios({
             url: 'https://api.evys.ru/admin2/ticket_statuses',
             method: 'get',
             headers: { 'Authorization': `Basic ${this.props.token}`, 'Account-Name': this.props.permalink }
         }).then(response => {
-            console.log(response);
             this.props.saveStatuses(response.data.data.results);
         })
-        .catch(err => {
-            console.log(err.response);
-        })
+            .catch(err => {
+                console.log(err.response);
+            })
     }
 
 
@@ -82,12 +93,16 @@ class Tickets extends Component {
         axios({
             url: `https://api.evys.ru/admin2/project/${this.props.id}/tickets`,
             method: 'get',
-            headers: { 'Authorization': `Basic ${this.props.token}`, 'Account-Name': this.props.permalink }
+            headers: { 'Authorization': `Basic ${this.props.token}`, 'Account-Name': this.props.permalink },
+            params: { page: this.state.activePage }
         })
             .then(response => {
-                console.log(response);
+                console.log(response.data.data.results);
+                let count = response.data.data.count;
+                this.setState({ 'count' : count });
+                console.log(this.state.count);
                 let tickets = response.data.data.results.map((item, index) => { return response.data.data.results[index] });
-                this.setState({ 'tickets': tickets });
+                this.setState({ 'tickets' : tickets });
             })
             .catch(err => {
                 console.log(err.response);
@@ -108,7 +123,15 @@ class Tickets extends Component {
                     modal
                     closeOnDocumentClick
                 >
-                    <span> <CreateTicket /> </span>
+                    {close => (
+                        <div>
+                        <a className="close" style={{float: 'right'}} onClick={close}>
+                            &times;
+                        </a>
+                        <br />
+                            <CreateTicket />
+                        </div>
+                    )}
                 </Popup>
                 <br />
                 <h1>Tickets list</h1>
@@ -127,7 +150,14 @@ class Tickets extends Component {
                     </Table>
                     </Paper>
                 }
-                <Popup className={'popup'} />
+                 <Pagination
+                    hideNavigation
+                    activePage={this.state.activePage}
+                    itemsCountPerPage={20}
+                    totalItemsCount={this.state.count*20}
+                    pageRangeDisplayed={this.state.count}
+                    onChange={this.handlePageChange}
+                />
             </div>
         )
     }
