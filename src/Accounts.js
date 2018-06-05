@@ -15,7 +15,7 @@ import { saveFirstName } from './actions/auth_actions';
 
 const styles = theme => ({
     root: {
-      width: '30%',
+      width: '70%',
       marginLeft: 'auto',
       marginRight: 'auto',
       marginTop: theme.spacing.unit * 3,

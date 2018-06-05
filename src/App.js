@@ -8,7 +8,6 @@ import { Provider } from 'react-redux';
 import setUpStore from './store'
 import Projects from './Projects.js';
 import Tickets from './Tickets.js';
-import CreateTicket from './CreateTicket.js';
 
 class App extends Component {
 
@@ -46,7 +45,6 @@ class App extends Component {
               <Route path='/accounts' component={Accounts} />
               <Route path='/projects' component={Projects} />
               <Route path='/tickets' component={Tickets} />
-              <Route path='/newticket' component={CreateTicket} />
             </Switch>
           </BrowserRouter>
 

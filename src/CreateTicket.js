@@ -18,7 +18,7 @@ const styles = theme => ({
     },
     margin: {
         margin: theme.spacing.unit,
-        width: 300,
+        width: '80%'
     },
     withoutLabel: {
         marginTop: theme.spacing.unit * 2,
@@ -35,13 +35,8 @@ class CreateTicket extends Component {
         this.state = {
             name: '',
             phone: '',
-            email: '',
-            status: '',
+            email: ''
         }
-    }
-
-    componentWillMount = () => {
-        this.getStatus();
     }
 
     handleUserInput = (e) => {
@@ -50,28 +45,9 @@ class CreateTicket extends Component {
         this.setState({ [name]: value });
     }
     
-    Exit = () => {
-        this.props.saveToken(null);
-        this.props.saveFirstName(null);
-        this.props.history.push('/login');
-    }
-
-    getStatus = () => {
-        axios({
-            url: 'https://api.evys.ru/admin2/ticket_statuses',
-            method: 'get',
-            headers: { 'Authorization': `Basic ${this.props.token}`, 'Account-Name': this.props.permalink }
-        }).then(response => {
-            console.log(response);
-            this.setState({'status' : response.data.data.results[1].id })
-        })
-        .catch(err => {
-            console.log(err.response);
-        })
-    }
 
     createNewTicket = () => {
-        let { name, phone, email, status } = this.state;
+        let { name, phone, email } = this.state;
         this.setState({ name: '', phone: '', email: '' });
 
         axios({
@@ -81,8 +57,7 @@ class CreateTicket extends Component {
             data: {
                 'name': name,
                 'phone': phone,
-                'email': email,
-                'status': status
+                'email': email
             }
         })
             .then(response => {
@@ -101,10 +76,8 @@ class CreateTicket extends Component {
 
         return (
 
-            <div className="form-group">
+            <div>
 
-                <Button style={{ float: 'left' }} variant="raised" color="secondary" onClick={this.Exit}> Exit </Button>
-                <br />
                 <h2>Create new ticket</h2>
                 <div>
                     <FormControl className={classNames(classes.margin, classes.withoutLabel, classes.textField)}>
@@ -159,7 +132,8 @@ const mapStateToProps = (state) => ({
     id: state.auth.id,
     token: state.auth.token,
     first_name: state.auth.first_name,
-    permalink: state.auth.permalink
+    permalink: state.auth.permalink,
+    statuses: state.auth.statuses
 })
 
 

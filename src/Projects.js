@@ -17,7 +17,7 @@ import Paper from '@material-ui/core/Paper';
 
 const styles = theme => ({
     root: {
-        width: '30%',
+        width: '70%',
         marginLeft: 'auto',
         marginRight: 'auto',
         marginTop: theme.spacing.unit * 3,
@@ -82,7 +82,6 @@ class Projects extends Component {
     render() {
         const { projects } = this.state;
         const { classes } = this.props;
-        console.log(projects);
 
         return (
             <div>

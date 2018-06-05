@@ -14,11 +14,14 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import AddIcon from '@material-ui/icons/Add';
+import Popup from 'reactjs-popup';
+import CreateTicket from './CreateTicket';
+import { saveStatuses} from './actions/auth_actions';
 
 
 const styles = theme => ({
     root: {
-        width: '50%',
+        width: '70%',
         marginLeft: 'auto',
         marginRight: 'auto',
         marginTop: theme.spacing.unit * 3,
@@ -34,6 +37,7 @@ class Tickets extends Component {
         }
     }
 
+
     Exit = () => {
         this.props.saveToken(null);
         this.props.saveFirstName(null);
@@ -44,6 +48,8 @@ class Tickets extends Component {
     componentWillMount = () => {
         console.log(this.props.id);
         this.getTickets();
+        this.getStatuses();
+        console.log(this.props.statuses);
     }
 
     renderItem = (item, index) => {
@@ -57,10 +63,20 @@ class Tickets extends Component {
         )
     }
 
-    createTicket = () => {
-        this.props.history.push('/newticket');
-
+    getStatuses = () => {
+        axios({
+            url: 'https://api.evys.ru/admin2/ticket_statuses',
+            method: 'get',
+            headers: { 'Authorization': `Basic ${this.props.token}`, 'Account-Name': this.props.permalink }
+        }).then(response => {
+            console.log(response);
+            this.props.saveStatuses(response.data.data.results);
+        })
+        .catch(err => {
+            console.log(err.response);
+        })
     }
+
 
     getTickets = () => {
         axios({
@@ -81,14 +97,19 @@ class Tickets extends Component {
     render() {
         const { tickets } = this.state;
         const { classes } = this.props;
-        console.log(tickets);
 
         return (
             <div>
                 <Button style={{ float: 'left' }} variant="raised" color="secondary" onClick={this.Exit}> Exit </Button>
-                <Button style={{ float: 'right', margin: '10px', marginLeft: '-20px' }} variant="fab" color="primary" aria-label="add" className={classes.button} onClick={this.createTicket}>
-                    <AddIcon />
-                </Button>
+                <Popup
+                    trigger={<Button style={{ float: 'right', margin: '10px', marginLeft: '-20px' }} variant="fab" color="primary" aria-label="add" className={classes.button}>
+                        <AddIcon />
+                    </Button>}
+                    modal
+                    closeOnDocumentClick
+                >
+                    <span> <CreateTicket /> </span>
+                </Popup>
                 <br />
                 <h1>Tickets list</h1>
                 {tickets.length !== 0 &&
@@ -106,6 +127,7 @@ class Tickets extends Component {
                     </Table>
                     </Paper>
                 }
+                <Popup className={'popup'} />
             </div>
         )
     }
@@ -117,14 +139,16 @@ const mapDispatchToProps = {
     savePermalink,
     saveToken,
     saveFirstName,
-    saveProjectId
+    saveProjectId,
+    saveStatuses
 }
 
 const mapStateToProps = (state) => ({
     id: state.auth.id,
     token: state.auth.token,
     first_name: state.auth.first_name,
-    permalink: state.auth.permalink
+    permalink: state.auth.permalink,
+    statuses: state.auth.statuses
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Tickets));

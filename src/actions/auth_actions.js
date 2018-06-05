@@ -1,4 +1,4 @@
-import { SAVE_TOKEN_ACTION, SAVE_ACCOUNT_ACTION, SAVE_FIRSTNAME_ACTION, SAVE_PROJECT_ID } from '../reducers/auth';
+import { SAVE_TOKEN_ACTION, SAVE_ACCOUNT_ACTION, SAVE_FIRSTNAME_ACTION, SAVE_PROJECT_ID, SAVE_STATUSES } from '../reducers/auth';
 
 export function saveToken(token) {
     return {type: SAVE_TOKEN_ACTION, token}
@@ -14,4 +14,8 @@ export function saveFirstName(first_name) {
 
 export function saveProjectId(id) {
     return {type: SAVE_PROJECT_ID, id}
+}
+
+export function saveStatuses(statuses) {
+    return {type: SAVE_STATUSES, statuses}
 }
