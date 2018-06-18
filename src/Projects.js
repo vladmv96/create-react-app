@@ -13,6 +13,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
+import { getProjectsTest } from './actions/auth_actions'
 
 
 const styles = theme => ({
@@ -45,7 +46,8 @@ class Projects extends Component {
 
     componentWillMount = () => {
         console.log(this.props.permalink);
-        this.getProjects();
+   //   this.getProjects();
+      this.props.getProjectsTest();
     }
 
     getTickets = (item) => {
@@ -100,6 +102,7 @@ class Projects extends Component {
                         </TableBody>
                     </Table>
                     </Paper>}
+                    <br />
             </div>
         )
     }
@@ -111,7 +114,8 @@ const mapDispatchToProps = {
     savePermalink,
     saveToken,
     saveFirstName,
-    saveProjectId
+    saveProjectId,
+    getProjectsTest
 }
 
 const mapStateToProps = (state) => ({

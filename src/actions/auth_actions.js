@@ -1,4 +1,4 @@
-import { SAVE_TOKEN_ACTION, SAVE_ACCOUNT_ACTION, SAVE_FIRSTNAME_ACTION, SAVE_PROJECT_ID, SAVE_STATUSES } from '../reducers/auth';
+import { SAVE_TOKEN_ACTION, SAVE_ACCOUNT_ACTION, SAVE_FIRSTNAME_ACTION, SAVE_PROJECT_ID, SAVE_STATUSES, GET_PROJECTS } from '../reducers/auth';
 
 export function saveToken(token) {
     return {type: SAVE_TOKEN_ACTION, token}
@@ -18,4 +18,8 @@ export function saveProjectId(id) {
 
 export function saveStatuses(statuses) {
     return {type: SAVE_STATUSES, statuses}
+}
+
+export function getProjectsTest() {
+    return {type: GET_PROJECTS, types:['a','b','c'], meta:{fetch:{url:'~admin2/projects', method: 'get'}}}
 }

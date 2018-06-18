@@ -1,8 +1,10 @@
 import { createStore, applyMiddleware, compose, combineReducers} from 'redux';
 import reduxThunk from 'redux-thunk';
+import urlMiddleware from './url_middleware';
+import axiosMiddleware from './axios_middleware';
 import modules from './reducers';
 
-const middlewares = [reduxThunk];
+const middlewares = [reduxThunk, urlMiddleware, axiosMiddleware];
 
 const enhancers = [applyMiddleware(...middlewares)];
 
@@ -25,4 +27,3 @@ function getStatedStorage(state) {
     global.store = store;
     return store;
 }
-
