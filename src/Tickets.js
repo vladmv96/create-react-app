@@ -18,6 +18,9 @@ import Popup from 'reactjs-popup';
 import CreateTicket from './CreateTicket';
 import { saveStatuses } from './actions/auth_actions';
 import Pagination from "react-js-pagination";
+import { getStatuses } from './actions/auth_actions';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 
 const styles = theme => ({
@@ -36,7 +39,12 @@ class Tickets extends Component {
         this.state = {
             tickets: '',
             activePage: 1,
-            count: ''
+            count: '',
+            status: '',
+            anchorEl: null,
+            anchorElCh: null,
+            updBol: true,
+            ticketId: null
         }
     }
 
@@ -53,68 +61,165 @@ class Tickets extends Component {
         this.getTickets();
         this.getStatuses();
         console.log(this.props.statuses);
-        console.log(this.state.count);
+    }
+
+    shouldComponentUpdate = () => {
+        return this.state.updBol;
     }
 
     renderItem = (item, index) => {
         return (
-            <TableRow key={index}>
+            <TableRow key={item.id}>
                 <TableCell> {item.name} </TableCell>
                 <TableCell> {item.phone} </TableCell>
                 <TableCell> {item.email} </TableCell>
+                <TableCell> <Button
+                    name={item.id}
+                    aria-owns={this.state.anchorElCh ? 'change-menu' : null}
+                    aria-haspopup="true"
+                    onClick={this.handleStatusChangeClick}
+                >
+                    {item.status.title}
+                </Button>
+                    <Menu
+                        id="change-menu"
+                        anchorEl={this.state.anchorElCh}
+                        open={Boolean(this.state.anchorElCh)}
+                        onClose={this.handleStatusChangeClose.bind(this, item)
+                        }
+                    >
+
+                        {this.props.statuses.map(this.renderStatusesToChange) }
+
+                    </Menu> </TableCell>
                 <TableCell> {item.id} </TableCell>
             </TableRow>
         )
     }
 
-    handlePageChange = (pageNumber) => {
-        console.log(`active page is ${pageNumber}`);
-        this.setState({ 'activePage' : pageNumber }, () => {
-            this.getTickets()
-        });
-      }
-
-    getStatuses = () => {
-        axios({
-            url: 'https://api.evys.ru/admin2/ticket_statuses',
-            method: 'get',
-            headers: { 'Authorization': `Basic ${this.props.token}`, 'Account-Name': this.props.permalink }
-        }).then(response => {
-            this.props.saveStatuses(response.data.data.results);
-        })
-            .catch(err => {
-                console.log(err.response);
-            })
+    renderStatusesToFilter = (item, index) => {
+        return (
+            <MenuItem onClick={this.handleStatusFilterClose.bind(this, item.permalink)}>{item.title}</MenuItem>
+        )
     }
 
+    renderStatusesToChange = (item, index) => {
+        return (
+            <MenuItem onClick={this.changeStatus.bind(this, item.permalink)}>{item.title}</MenuItem>
+        )
+    }
+
+    handlePageChange = (pageNumber) => {
+        console.log(`active page is ${pageNumber}`);
+        this.setState({ 'activePage': pageNumber }, () => {
+            this.getTickets()
+        });
+    }
+
+    getStatuses = () => {
+        this.props.getStatuses().then(response => {
+            console.log(response);
+            this.props.saveStatuses(response.data.data.results);
+        }).catch(err => {
+            console.log(err.response);
+        });
+
+    }
+
+    handleStatusFilterClick = event => {
+        this.setState({ 'anchorEl': event.currentTarget });
+    };
+
+    handleStatusFilterClose = (permalink) => {
+        this.setState({ 'status': permalink, 'anchorEl': null }, () => {
+            this.getTickets()
+        });
+    };
+
+    handleStatusChangeClick = event => {
+        console.log(event.target.name);
+        this.setState({ ticketId: parseInt(event.target.name, 10), 'anchorElCh': event.currentTarget });
+    };
+
+    handleStatusChangeClose = (permalink) => {
+        this.setState({ 'status': permalink, 'anchorElCh': null });
+    };
 
     getTickets = () => {
         axios({
             url: `https://api.evys.ru/admin2/project/${this.props.id}/tickets`,
             method: 'get',
             headers: { 'Authorization': `Basic ${this.props.token}`, 'Account-Name': this.props.permalink },
-            params: { page: this.state.activePage }
+            params: { page: this.state.activePage, status: this.state.status }
         })
             .then(response => {
                 console.log(response.data.data.results);
                 let count = response.data.data.count;
-                this.setState({ 'count' : count });
-                console.log(this.state.count);
                 let tickets = response.data.data.results.map((item, index) => { return response.data.data.results[index] });
-                this.setState({ 'tickets' : tickets });
+                this.setState({ 'count': count, 'tickets': tickets });
+
             })
             .catch(err => {
                 console.log(err.response);
             })
     }
 
+    changeStatus = (permalink) => {
+
+        console.log('ACTION');
+
+        console.log(permalink);
+        console.log(this.state.ticketId);
+
+        axios({
+            url: `https://api.evys.ru/admin2/ticket/${this.state.ticketId}`,
+            method: 'put',
+            headers: { 'Authorization': `Basic ${this.props.token}`, 'Account-Name': this.props.permalink },
+            data: { status: permalink }
+        }).then(response => {
+            console.log(response);
+            this.getTickets();
+        });
+
+        this.setState({ 'anchorElCh': null }, () => {
+            this.getTickets()
+        });
+    }
+
     render() {
         const { tickets } = this.state;
+        const { anchorEl } = this.state;
         const { classes } = this.props;
+
 
         return (
             <div>
                 <Button style={{ float: 'left' }} variant="raised" color="secondary" onClick={this.Exit}> Exit </Button>
+
+                <Button
+                    aria-owns={anchorEl ? 'status-menu' : null}
+                    aria-haspopup="true"
+                    onClick={this.handleStatusFilterClick}
+                >
+                    Status
+                </Button>
+
+
+
+                <Menu
+                    id="status-menu"
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={this.handleStatusFilterClose}
+                >
+
+
+
+                    {this.props.statuses.map(this.renderStatusesToFilter)}
+
+                </Menu>
+
+
                 <Popup
                     trigger={<Button style={{ float: 'right', margin: '10px', marginLeft: '-20px' }} variant="fab" color="primary" aria-label="add" className={classes.button}>
                         <AddIcon />
@@ -124,10 +229,10 @@ class Tickets extends Component {
                 >
                     {close => (
                         <div>
-                        <a className="close" style={{float: 'right'}} onClick={close}>
-                            &times;
+                            <a className="close" style={{ float: 'right' }} onClick={close}>
+                                &times;
                         </a>
-                        <br />
+                            <br />
                             <CreateTicket />
                         </div>
                     )}
@@ -140,6 +245,7 @@ class Tickets extends Component {
                             <TableCell>Name</TableCell>
                             <TableCell>Phone</TableCell>
                             <TableCell>Email</TableCell>
+                            <TableCell>Status</TableCell>
                             <TableCell>Id</TableCell>
                         </TableRow>
                     </TableHead>
@@ -149,11 +255,11 @@ class Tickets extends Component {
                     </Table>
                     </Paper>
                 }
-                 <Pagination
+                <Pagination
                     hideNavigation
                     activePage={this.state.activePage}
                     itemsCountPerPage={20}
-                    totalItemsCount={this.state.count*20}
+                    totalItemsCount={this.state.count * 20}
                     pageRangeDisplayed={this.state.count}
                     onChange={this.handlePageChange}
                 />
@@ -169,7 +275,8 @@ const mapDispatchToProps = {
     saveToken,
     saveFirstName,
     saveProjectId,
-    saveStatuses
+    saveStatuses,
+    getStatuses
 }
 
 const mapStateToProps = (state) => ({

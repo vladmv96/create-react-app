@@ -5,7 +5,8 @@ const isValidFetchingAction = (action) => action.types && action.meta && action.
 
 export default  store => next => action => {
     if ( isValidFetchingAction(action) ) {
-        const { fetch } = action.meta.fetch;
+        const fetch = action.meta.fetch;
+        console.log(fetch);
         delete action.meta.fetch;
         if (action.types.length >= 3)
         {
@@ -13,16 +14,18 @@ export default  store => next => action => {
 
         next( { type: pending, meta: action.meta } );
 
-        axios( fetch )
+
+        return axios( fetch )
         .then(response => { 
             store.dispatch({ type:success, payload: response.data, response, meta: action.meta });
+            return response;
         })
         .catch(err => {
-            console.log(err);
-            store.dispatch({ type:error, payload: err.data, response: error, meta: action.meta })
+            store.dispatch({ type:error, payload: err.data, response: error, meta: action.meta });
+            throw error;
         })
     }
 }
 
-    return next(action);
+   // return next(action);
 }

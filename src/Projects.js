@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { connect } from 'react-redux';
 import { savePermalink } from './actions/auth_actions';
 import { saveToken } from './actions/auth_actions';
@@ -13,7 +12,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { getProjectsTest } from './actions/auth_actions'
+import { getProjects } from './actions/auth_actions'
 
 
 const styles = theme => ({
@@ -46,8 +45,14 @@ class Projects extends Component {
 
     componentWillMount = () => {
         console.log(this.props.permalink);
-   //   this.getProjects();
-      this.props.getProjectsTest();
+        this.props.getProjects().then(
+            response => {
+                console.log(response);
+                let projects = response.data.data.results.map((item, index) => { return response.data.data.results[index] });
+                this.setState({ 'projects': projects });
+            }).catch(err => {
+                console.log(err.response);
+            });
     }
 
     getTickets = (item) => {
@@ -59,26 +64,10 @@ class Projects extends Component {
     renderItem = (item, index) => {
         return (
             <TableRow key={index}>
-                <TableCell onClick={this.getTickets.bind(this,item)}> {item.name} </TableCell>
+                <TableCell onClick={this.getTickets.bind(this, item)}> {item.name} </TableCell>
                 <TableCell> {item.id} </TableCell>
             </TableRow>
         )
-    }
-
-    getProjects = () => {
-        axios({
-            url: 'https://api.evys.ru/admin2/projects',
-            method: 'get',
-            headers: { 'Authorization': `Basic ${this.props.token}`, 'Account-Name': this.props.permalink }
-        })
-            .then(response => {
-                console.log(response);
-                let projects = response.data.data.results.map((item, index) => { return response.data.data.results[index] });
-                this.setState({ 'projects': projects });
-            })
-            .catch(err => {
-                console.log(err.response);
-            })
     }
 
     render() {
@@ -102,7 +91,7 @@ class Projects extends Component {
                         </TableBody>
                     </Table>
                     </Paper>}
-                    <br />
+                <br />
             </div>
         )
     }
@@ -115,7 +104,7 @@ const mapDispatchToProps = {
     saveToken,
     saveFirstName,
     saveProjectId,
-    getProjectsTest
+    getProjects
 }
 
 const mapStateToProps = (state) => ({

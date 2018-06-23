@@ -44,7 +44,7 @@ class App extends Component {
               <Route path='/login' component={Form} />
               <Route path='/accounts' component={Accounts} />
               <Route path='/projects' component={Projects} />
-              <Route path='/tickets' component={Tickets} />
+              <Route exact path='/tickets' component={Tickets} />
             </Switch>
           </BrowserRouter>
 

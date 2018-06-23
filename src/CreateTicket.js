@@ -69,7 +69,7 @@ class CreateTicket extends Component {
             })
             .catch(err => {
                 console.log(err.response);
-            })
+            });
     };
 
 

@@ -4,6 +4,9 @@ export const SAVE_FIRSTNAME_ACTION = 'SAVE_FIRSTNAME_ACTION'
 export const SAVE_PROJECT_ID = 'SAVE_PROJECT_ID'
 export const SAVE_STATUSES = 'SAVE_STATUSES'
 export const GET_PROJECTS = 'GET_PROJECTS'
+export const GET_DATA = 'GET_DATA'
+export const GET_STATUSES = 'GET_STATUSES'
+export const GET_ACCOUNTS = 'GET_ACCOUNTS'
 
 const initialState = {
     token: '',
@@ -27,6 +30,12 @@ export default function (state = initialState, action) {
         case SAVE_STATUSES:
             return { ...state, statuses: action.statuses }
         case GET_PROJECTS:
+            return { ...state}
+        case GET_DATA:
+            return { ...state}
+        case GET_STATUSES:
+            return { ...state}
+        case GET_ACCOUNTS:
             return { ...state}
         default:
             return state

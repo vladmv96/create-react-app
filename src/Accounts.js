@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import Button from '@material-ui/core/Button';
 import { withStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -12,6 +11,7 @@ import { connect } from 'react-redux';
 import { savePermalink } from './actions/auth_actions';
 import { saveToken } from './actions/auth_actions';
 import { saveFirstName } from './actions/auth_actions';
+import { getAccounts } from './actions/auth_actions';
 
 const styles = theme => ({
     root: {
@@ -60,17 +60,12 @@ class Accounts extends Component {
     }
 
     getAccounts = () => {
-        axios({
-            url: 'https://api.evys.ru/admin2/accounts',
-            method: 'get',
-            headers: {'Authorization':`Basic ${this.props.token}`}
-          })
-          .then(response => {
+
+        this.props.getAccounts().then(response => {
             console.log(response);
             let accounts = response.data.data.map((item, index) => { return response.data.data[index] });
             this.setState({'accounts': accounts});
-          })
-          .catch(err => {
+          }).catch(err => {
             console.log(err.response);
           })
     }
@@ -112,7 +107,8 @@ class Accounts extends Component {
 const mapDispatchToProps = {
     savePermalink,
     saveToken,
-    saveFirstName
+    saveFirstName,
+    getAccounts
   }
 
 const mapStateToProps = (state) => ({

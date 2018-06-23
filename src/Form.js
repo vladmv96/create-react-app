@@ -10,11 +10,11 @@ import InputAdornment from '@material-ui/core/InputAdornment';
 import FormControl from '@material-ui/core/FormControl';
 import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import axios from 'axios';
 import { btoa } from 'Base64';
 import { connect } from 'react-redux';
 import { saveToken } from './actions/auth_actions';
 import { saveFirstName } from './actions/auth_actions';
+import { getData } from './actions/auth_actions'
 
 const styles = theme => ({
   root: {
@@ -56,20 +56,17 @@ class Form extends Component {
     this.setState({ login: '', password: '' });
     let token = btoa(`${login}:${password}`);
 
-    axios({
-      url: 'https://api.evys.ru/admin2/info',
-      headers: { 'Authorization': `Basic ${token}` }
-    })
-      .then(response => {
+    this.props.getData().then(
+      response => {
         console.log(response);
         this.props.saveToken(token);
         this.props.saveFirstName(response.data.data.first_name);
         this.props.history.push('/accounts');
-      })
-      .catch(err => {
-        console.log(err.response);
-        this.setState({ description: err.response.data.error.description });
-      })
+      }).catch(err => {
+          console.log(err.response);
+          this.setState({ description: err.response.data.error.description });
+        })
+    
   };
 
   handleMouseDownPassword = event => {
@@ -140,7 +137,8 @@ class Form extends Component {
 
 const mapDispatchToProps = {
   saveToken,
-  saveFirstName
+  saveFirstName,
+  getData
 }
 
 export default connect(null, mapDispatchToProps)(withStyles(styles)(Form));
