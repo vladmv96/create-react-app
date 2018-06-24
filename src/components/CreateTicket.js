@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './Form.css';
+import './styles/Form.css';
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
@@ -8,9 +8,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { saveToken } from './actions/auth_actions';
-import { saveFirstName } from './actions/auth_actions';
-import { saveProjectId } from './actions/auth_actions';
+import { saveToken, saveFirstName, saveProjectId } from '../actions/auth_actions';
 
 const styles = theme => ({
     root: {

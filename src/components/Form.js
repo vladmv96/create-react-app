@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import './Form.css';
+import './styles/Form.css';
 import Button from '@material-ui/core/Button';
 import classNames from 'classnames';
 import { withStyles } from '@material-ui/core/styles';
@@ -12,9 +12,7 @@ import Visibility from '@material-ui/icons/Visibility';
 import VisibilityOff from '@material-ui/icons/VisibilityOff';
 import { btoa } from 'Base64';
 import { connect } from 'react-redux';
-import { saveToken } from './actions/auth_actions';
-import { saveFirstName } from './actions/auth_actions';
-import { getData } from './actions/auth_actions'
+import { saveToken, saveFirstName, getData } from '../actions/auth_actions';
 
 const styles = theme => ({
   root: {

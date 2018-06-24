@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { savePermalink } from './actions/auth_actions';
-import { saveToken } from './actions/auth_actions';
-import { saveFirstName } from './actions/auth_actions';
-import { saveProjectId } from './actions/auth_actions';
+import { savePermalink, saveToken, saveFirstName, saveProjectId, getProjects } from '../actions/auth_actions';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
@@ -12,7 +9,6 @@ import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
-import { getProjects } from './actions/auth_actions'
 
 
 const styles = theme => ({

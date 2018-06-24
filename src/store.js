@@ -1,7 +1,7 @@
 import { createStore, applyMiddleware, compose, combineReducers} from 'redux';
 import reduxThunk from 'redux-thunk';
-import urlMiddleware from './url_middleware';
-import axiosMiddleware from './axios_middleware';
+import urlMiddleware from './middlewares/url_middleware';
+import axiosMiddleware from './middlewares/axios_middleware';
 import modules from './reducers';
 
 const middlewares = [reduxThunk, urlMiddleware, axiosMiddleware];

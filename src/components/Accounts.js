@@ -8,10 +8,7 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import { connect } from 'react-redux';
-import { savePermalink } from './actions/auth_actions';
-import { saveToken } from './actions/auth_actions';
-import { saveFirstName } from './actions/auth_actions';
-import { getAccounts } from './actions/auth_actions';
+import { savePermalink, saveToken, saveFirstName, getAccounts } from '../actions/auth_actions';
 
 const styles = theme => ({
     root: {

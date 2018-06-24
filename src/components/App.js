@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import './App.css';
+import './styles/App.css';
 import Form from './Form.js';
 import Accounts from './Accounts.js';
 import { BrowserRouter } from 'react-router-dom';
 import { Route, Switch } from 'react-router';
 import { Provider } from 'react-redux';
-import setUpStore from './store'
+import setUpStore from '../store'
 import Projects from './Projects.js';
 import Tickets from './Tickets.js';
 

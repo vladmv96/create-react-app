@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import { connect } from 'react-redux';
-import { savePermalink } from './actions/auth_actions';
-import { saveToken } from './actions/auth_actions';
-import { saveFirstName } from './actions/auth_actions';
-import { saveProjectId } from './actions/auth_actions';
+import { savePermalink, saveToken, saveFirstName, saveProjectId, saveStatuses, getStatuses } from '../actions/auth_actions';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
@@ -17,9 +14,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Popup from 'reactjs-popup';
 import CreateTicket from './CreateTicket';
 import CreateStatus from './CreateStatus';
-import { saveStatuses } from './actions/auth_actions';
 import Pagination from "react-js-pagination";
-import { getStatuses } from './actions/auth_actions';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
@@ -102,7 +97,7 @@ class Tickets extends Component {
 
     renderStatusesToFilter = (item, index) => {
         return (
-            <MenuItem onClick={this.handleStatusFilterClose.bind(this, item.permalink)}>{item.title}</MenuItem>
+            <MenuItem onClick={this.handleStatusFilterElementClick.bind(this, item.permalink)}>{item.title}</MenuItem>
         )
     }
 
@@ -133,8 +128,14 @@ class Tickets extends Component {
         this.setState({ 'anchorEl': event.currentTarget });
     };
 
-    handleStatusFilterClose = (permalink) => {
-        this.setState({ 'status': permalink, 'anchorEl': null }, () => {
+    handleStatusFilterClose = () => {
+        this.setState({ 'anchorEl': null }, () => {
+            this.getTickets()
+        });
+    };
+
+    handleStatusFilterElementClick = (permalink) => {
+        this.setState({  'status': permalink, 'anchorEl': null }, () => {
             this.getTickets()
         });
     };
@@ -207,8 +208,6 @@ class Tickets extends Component {
                     Status
                 </Button>
 
-
-
                 <Menu
                     id="status-menu"
                     anchorEl={anchorEl}
@@ -216,10 +215,7 @@ class Tickets extends Component {
                     onClose={this.handleStatusFilterClose}
                 >
 
-
-
-                    {this.props.statuses.map(this.renderStatusesToFilter)}
-                    
+                    {this.props.statuses.map(this.renderStatusesToFilter)} 
 
                 </Menu>
 
