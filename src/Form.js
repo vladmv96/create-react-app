@@ -55,11 +55,11 @@ class Form extends Component {
     console.log('login: ' + this.state.login + ' password: ' + this.state.password)
     this.setState({ login: '', password: '' });
     let token = btoa(`${login}:${password}`);
+    this.props.saveToken(token);
 
     this.props.getData().then(
       response => {
         console.log(response);
-        this.props.saveToken(token);
         this.props.saveFirstName(response.data.data.first_name);
         this.props.history.push('/accounts');
       }).catch(err => {

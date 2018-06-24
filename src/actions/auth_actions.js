@@ -21,17 +21,17 @@ export function saveStatuses(statuses) {
 }
 
 export function getProjects() {
-    return {type: GET_PROJECTS, types:['a','b','c'], meta:{fetch:{url:'~admin2/projects', method: 'get'}}}
+    return {type: GET_PROJECTS, types:['getProjectsLoad','getProjectsSuccess','getProjectsError'], meta:{fetch:{url:'~admin2/projects', method: 'get'}}}
 }
 
 export function getData() {
-    return {type: GET_DATA, types:['a','b','c'], meta:{fetch:{url:'~admin2/info'}}}
+    return {type: GET_DATA, types:['getDataLoad','getDataSuccess','getDataError'], meta:{fetch:{url:'~admin2/info'}}}
 }
 
 export function getStatuses() {
-    return {type: GET_STATUSES, types:['a','b','c'], meta:{fetch:{url:'~admin2/ticket_statuses', method: 'get'}}}
+    return {type: GET_STATUSES, types:['getStatusesLoad','getStatusesSuccess','getStatusesError'], meta:{fetch:{url:'~admin2/ticket_statuses', method: 'get'}}}
 }
 
 export function getAccounts() {
-    return {type: GET_ACCOUNTS, types:['a','b','c'], meta:{fetch:{url:'~admin2/accounts', method: 'get'}}}
+    return {type: GET_ACCOUNTS, types:['getAccountsLoad','getAccountsSuccess','getAccountsError'], meta:{fetch:{url:'~admin2/accounts', method: 'get'}}}
 }

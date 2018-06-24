@@ -16,6 +16,7 @@ import Paper from '@material-ui/core/Paper';
 import AddIcon from '@material-ui/icons/Add';
 import Popup from 'reactjs-popup';
 import CreateTicket from './CreateTicket';
+import CreateStatus from './CreateStatus';
 import { saveStatuses } from './actions/auth_actions';
 import Pagination from "react-js-pagination";
 import { getStatuses } from './actions/auth_actions';
@@ -89,7 +90,9 @@ class Tickets extends Component {
                         }
                     >
 
-                        {this.props.statuses.map(this.renderStatusesToChange) }
+                        {console.log(0)}
+
+                        { this.props.statuses.map(this.renderStatusesToChange) }
 
                     </Menu> </TableCell>
                 <TableCell> {item.id} </TableCell>
@@ -105,7 +108,7 @@ class Tickets extends Component {
 
     renderStatusesToChange = (item, index) => {
         return (
-            <MenuItem onClick={this.changeStatus.bind(this, item.permalink)}>{item.title}</MenuItem>
+            <MenuItem onClick={this.changeStatus.bind(this, item.permalink, this.state.ticketId)}>{item.title}</MenuItem>
         )
     }
 
@@ -119,7 +122,7 @@ class Tickets extends Component {
     getStatuses = () => {
         this.props.getStatuses().then(response => {
             console.log(response);
-            this.props.saveStatuses(response.data.data.results);
+            this.props.saveStatuses(response.data.data);
         }).catch(err => {
             console.log(err.response);
         });
@@ -137,8 +140,8 @@ class Tickets extends Component {
     };
 
     handleStatusChangeClick = event => {
-        console.log(event.target.name);
-        this.setState({ ticketId: parseInt(event.target.name, 10), 'anchorElCh': event.currentTarget });
+         console.log(event.target.name);
+         this.setState({ ticketId: parseInt(event.target.name, 10), 'anchorElCh': event.currentTarget });
     };
 
     handleStatusChangeClose = (permalink) => {
@@ -155,7 +158,7 @@ class Tickets extends Component {
             .then(response => {
                 console.log(response.data.data.results);
                 let count = response.data.data.count;
-                let tickets = response.data.data.results.map((item, index) => { return response.data.data.results[index] });
+                let tickets = response.data.data.results;
                 this.setState({ 'count': count, 'tickets': tickets });
 
             })
@@ -164,15 +167,15 @@ class Tickets extends Component {
             })
     }
 
-    changeStatus = (permalink) => {
+    changeStatus = (permalink, ticketId) => {
 
         console.log('ACTION');
 
         console.log(permalink);
-        console.log(this.state.ticketId);
+        console.log(ticketId);
 
         axios({
-            url: `https://api.evys.ru/admin2/ticket/${this.state.ticketId}`,
+            url: `https://api.evys.ru/admin2/ticket/${ticketId}`,
             method: 'put',
             headers: { 'Authorization': `Basic ${this.props.token}`, 'Account-Name': this.props.permalink },
             data: { status: permalink }
@@ -216,9 +219,27 @@ class Tickets extends Component {
 
 
                     {this.props.statuses.map(this.renderStatusesToFilter)}
+                    
 
                 </Menu>
 
+                 <Popup
+                    trigger={<Button style={{ margin: '10px' }} color="primary" aria-label="add" className={classes.button}>
+                    Create new status
+                </Button>}
+                    modal
+                    closeOnDocumentClick
+                >
+                    {close => (
+                        <div>
+                            <a className="close" style={{ float: 'right' }} onClick={close}>
+                                &times;
+                        </a>
+                            <br />
+                            <CreateStatus />
+                        </div>
+                    )}
+                </Popup>
 
                 <Popup
                     trigger={<Button style={{ float: 'right', margin: '10px', marginLeft: '-20px' }} variant="fab" color="primary" aria-label="add" className={classes.button}>

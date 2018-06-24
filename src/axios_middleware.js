@@ -22,10 +22,10 @@ export default  store => next => action => {
         })
         .catch(err => {
             store.dispatch({ type:error, payload: err.data, response: error, meta: action.meta });
-            throw error;
+            throw err;
         })
     }
 }
 
-   // return next(action);
+    return next(action);
 }
