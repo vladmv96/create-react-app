@@ -70,7 +70,6 @@ class Accounts extends Component {
     render() {
         const { accounts } = this.state;
         const { classes } = this.props;
-        console.log(accounts);
 
         return (
             <div>

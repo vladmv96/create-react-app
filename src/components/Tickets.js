@@ -53,10 +53,8 @@ class Tickets extends Component {
     }
 
     componentWillMount = () => {
-        console.log(this.props.id);
         this.getStatuses();
         this.getTickets();
-        console.log(this.props.statuses);
     }
 
     shouldComponentUpdate = () => {
@@ -85,8 +83,6 @@ class Tickets extends Component {
                         }
                     >
 
-                        {console.log(0)}
-
                         {this.props.statuses.map(this.renderStatusesToChange)}
 
                     </Menu> </TableCell>
@@ -97,18 +93,17 @@ class Tickets extends Component {
 
     renderStatusesToFilter = (item, index) => {
         return (
-            <MenuItem onClick={this.handleStatusFilterElementClick.bind(this, item.permalink)}>{item.title}</MenuItem>
+            <MenuItem onClick={this.handleStatusFilterElementClick.bind(this, item.permalink)} key={index}> {item.title} </MenuItem>
         )
     }
 
     renderStatusesToChange = (item, index) => {
         return (
-            <MenuItem onClick={this.changeStatus.bind(this, item.permalink, this.state.ticketId)}>{item.title}</MenuItem>
+            <MenuItem onClick={this.changeStatus.bind(this, item.permalink, this.state.ticketId)} key={index}>{item.title}</MenuItem>
         )
     }
 
     handlePageChange = (pageNumber) => {
-        console.log(`active page is ${pageNumber}`);
         this.setState({ 'activePage': pageNumber }, () => {
             this.getTickets()
         });
@@ -170,11 +165,6 @@ class Tickets extends Component {
     }
 
     changeStatus = (permalink, ticketId) => {
-
-        console.log('ACTION');
-
-        console.log(permalink);
-        console.log(ticketId);
 
         axios({
             url: `https://api.evys.ru/admin2/ticket/${ticketId}`,
