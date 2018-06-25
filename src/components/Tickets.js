@@ -54,8 +54,8 @@ class Tickets extends Component {
 
     componentWillMount = () => {
         console.log(this.props.id);
-        this.getTickets();
         this.getStatuses();
+        this.getTickets();
         console.log(this.props.statuses);
     }
 
@@ -73,7 +73,7 @@ class Tickets extends Component {
                     name={item.id}
                     aria-owns={this.state.anchorElCh ? 'change-menu' : null}
                     aria-haspopup="true"
-                    onClick={this.handleStatusChangeClick}
+                    onClick={this.handleStatusChangeClick.bind(this, item.id)}
                 >
                     {item.status.title}
                 </Button>
@@ -87,7 +87,7 @@ class Tickets extends Component {
 
                         {console.log(0)}
 
-                        { this.props.statuses.map(this.renderStatusesToChange) }
+                        {this.props.statuses.map(this.renderStatusesToChange)}
 
                     </Menu> </TableCell>
                 <TableCell> {item.id} </TableCell>
@@ -135,14 +135,15 @@ class Tickets extends Component {
     };
 
     handleStatusFilterElementClick = (permalink) => {
-        this.setState({  'status': permalink, 'anchorEl': null }, () => {
+        this.setState({ 'status': permalink, 'anchorEl': null }, () => {
             this.getTickets()
         });
     };
 
-    handleStatusChangeClick = event => {
-         console.log(event.target.name);
-         this.setState({ ticketId: parseInt(event.target.name, 10), 'anchorElCh': event.currentTarget });
+    handleStatusChangeClick = (id, event) => {
+        console.log(id);
+        this.setState({ ticketId: id });
+        this.setState({ 'anchorElCh': event.currentTarget });
     };
 
     handleStatusChangeClose = (permalink) => {
@@ -215,13 +216,13 @@ class Tickets extends Component {
                     onClose={this.handleStatusFilterClose}
                 >
 
-                    {this.props.statuses.map(this.renderStatusesToFilter)} 
+                    {this.props.statuses.map(this.renderStatusesToFilter)}
 
                 </Menu>
 
-                 <Popup
+                <Popup
                     trigger={<Button style={{ margin: '10px' }} color="primary" aria-label="add" className={classes.button}>
-                    Create new status
+                        Create new status
                 </Button>}
                     modal
                     closeOnDocumentClick

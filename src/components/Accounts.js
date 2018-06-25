@@ -12,16 +12,16 @@ import { savePermalink, saveToken, saveFirstName, getAccounts } from '../actions
 
 const styles = theme => ({
     root: {
-      width: '70%',
-      marginLeft: 'auto',
-      marginRight: 'auto',
-      marginTop: theme.spacing.unit * 3,
-      overflowX: 'auto',
+        width: '70%',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        marginTop: theme.spacing.unit * 3,
+        overflowX: 'auto',
     },
     table: {
-      minWidth: 300,
+        minWidth: 300,
     },
-  });
+});
 
 class Accounts extends Component {
 
@@ -30,7 +30,7 @@ class Accounts extends Component {
         this.state = {
             accounts: '',
         }
-      }
+    }
 
     componentWillMount = () => {
         this.getAccounts();
@@ -42,10 +42,10 @@ class Accounts extends Component {
     }
 
     renderItem = (item, index) => {
-        return( 
-            <TableRow key={index}>     
-            <TableCell onClick={this.getProjects.bind(this,item)}> {item.name} </TableCell>
-            <TableCell> {item.id} </TableCell>
+        return (
+            <TableRow key={index}>
+                <TableCell onClick={this.getProjects.bind(this, item)}> {item.name} </TableCell>
+                <TableCell> {item.id} </TableCell>
             </TableRow>
         )
     }
@@ -61,10 +61,10 @@ class Accounts extends Component {
         this.props.getAccounts().then(response => {
             console.log(response);
             let accounts = response.data.data.map((item, index) => { return response.data.data[index] });
-            this.setState({'accounts': accounts});
-          }).catch(err => {
+            this.setState({ 'accounts': accounts });
+        }).catch(err => {
             console.log(err.response);
-          })
+        })
     }
 
     render() {
@@ -74,25 +74,25 @@ class Accounts extends Component {
 
         return (
             <div>
-            <Button style={{float: 'left' }} variant="raised" color="secondary" onClick={this.Exit}> Exit </Button>
-            <br />
+                <Button style={{ float: 'left' }} variant="raised" color="secondary" onClick={this.Exit}> Exit </Button>
+                <br />
 
-            <h1>
-                Hello, {this.props.first_name}
-            </h1>
-            
-             {accounts.length !== 0 && 
-             <Paper className={classes.root}><Table className={classes.table}><TableHead>
-             <TableRow>
-               <TableCell>Name</TableCell>
-               <TableCell>Id</TableCell>
-             </TableRow>
-           </TableHead>
-           <TableBody>
-           {accounts.map(this.renderItem)}
-           </TableBody>
-           </Table>
-           </Paper>}
+                <h1>
+                    Hello, {this.props.first_name}
+                </h1>
+
+                {accounts.length !== 0 &&
+                    <Paper className={classes.root}><Table className={classes.table}><TableHead>
+                        <TableRow>
+                            <TableCell>Name</TableCell>
+                            <TableCell>Id</TableCell>
+                        </TableRow>
+                    </TableHead>
+                        <TableBody>
+                            {accounts.map(this.renderItem)}
+                        </TableBody>
+                    </Table>
+                    </Paper>}
 
             </div>
         )
@@ -106,7 +106,7 @@ const mapDispatchToProps = {
     saveToken,
     saveFirstName,
     getAccounts
-  }
+}
 
 const mapStateToProps = (state) => ({
     permalink: state.auth.permalink,
@@ -114,4 +114,4 @@ const mapStateToProps = (state) => ({
     first_name: state.auth.first_name
 })
 
-export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(Accounts)); 
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Accounts)); 

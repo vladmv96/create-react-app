@@ -40,12 +40,12 @@ class CreateTicket extends Component {
         const value = e.target.value;
         this.setState({ [name]: value });
     }
-    
+
 
     createNewStatus = () => {
         let { title } = this.state;
         this.setState({ title: '' });
-        
+
         axios({
             url: `https://api.evys.ru/admin2/ticket_statuses`,
             method: 'post',

@@ -61,10 +61,10 @@ class Form extends Component {
         this.props.saveFirstName(response.data.data.first_name);
         this.props.history.push('/accounts');
       }).catch(err => {
-          console.log(err.response);
-          this.setState({ description: err.response.data.error.description });
-        })
-    
+        console.log(err.response);
+        this.setState({ description: err.response.data.error.description });
+      })
+
   };
 
   handleMouseDownPassword = event => {
