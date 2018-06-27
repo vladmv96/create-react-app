@@ -7,7 +7,7 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import { connect } from 'react-redux';
-import { saveToken, saveFirstName, saveProjectId, createTicket } from '../actions/auth_actions';
+import { saveToken, saveFirstName, saveProjectId, createTicket, getTickets, saveTickets } from '../actions/auth_actions';
 
 const styles = theme => ({
     root: {
@@ -32,7 +32,10 @@ class CreateTicket extends Component {
         this.state = {
             name: '',
             phone: '',
-            email: ''
+            email: '',
+            activePage: 1,
+            status: 'novyi',
+            refr: null
         }
     }
 
@@ -51,7 +54,15 @@ class CreateTicket extends Component {
         let { name, phone, email } = this.state;
         this.setState({ name: '', phone: '', email: '' });
 
-        this.props.createTicket(this.props.id, name, phone, email)
+        this.props.createTicket(this.props.id, name, phone, email);
+        
+        this.props.getTickets(this.props.id, this.state.activePage, this.state.status ).then(
+            response => {
+                console.log(response.data.data.results);
+                let tickets = response.data.data.results;
+                this.props.saveTickets(tickets);
+            })
+
     };
 
 
@@ -112,7 +123,9 @@ const mapDispatchToProps = {
     saveToken,
     saveFirstName,
     saveProjectId,
-    createTicket
+    createTicket,
+    getTickets,
+    saveTickets
 }
 
 const mapStateToProps = (state) => ({

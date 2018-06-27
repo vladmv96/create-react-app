@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import { deleteStatus } from '../actions/auth_actions';
+import { deleteStatus, getTickets, getStatuses, saveStatuses } from '../actions/auth_actions';
 
 
 
@@ -21,6 +21,9 @@ class DeleteStatus extends Component {
     constructor(props) {
         super(props);
         this.state = {
+            activePage: 1,
+            status: 'novyi',
+            refr: null
         }
     }
     
@@ -38,7 +41,29 @@ class DeleteStatus extends Component {
     }
 
     deleteStatus = (id) => {
+
         this.props.deleteStatus(id);
+
+        this.props.getStatuses().then(response => {
+            console.log(response);
+            this.props.saveStatuses(response.data.data);
+        }).catch(err => {
+            console.log(err.response);
+        });
+
+        this.setState({ refr: 1 }, () => {
+            this.props.getTickets(this.props.id, this.state.activePage, this.state.status );
+
+            this.props.getStatuses().then(response => {
+                console.log(response);
+                this.props.saveStatuses(response.data.data);
+            }).catch(err => {
+                console.log(err.response);
+            });
+        });
+
+        this.setState({refr: null});
+
     }
 
     render() {
@@ -67,7 +92,10 @@ const mapStateToProps = (state) => ({
 })
 
 const mapDispatchToProps = {
-    deleteStatus
+    deleteStatus,
+    getTickets,
+    getStatuses,
+    saveStatuses
 }
 
 

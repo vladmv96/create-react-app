@@ -7,7 +7,7 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
 import { connect } from 'react-redux';
-import { saveToken, saveFirstName, saveProjectId, createStatus } from '../actions/auth_actions';
+import { saveToken, saveFirstName, saveProjectId, createStatus, getStatuses, saveStatuses, getTickets } from '../actions/auth_actions';
 
 const styles = theme => ({
     root: {
@@ -30,7 +30,10 @@ class CreateTicket extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            title: ''
+            title: '',
+            activePage: 1,
+            status: 'novyi',
+            refr: null
         }
     }
 
@@ -44,8 +47,25 @@ class CreateTicket extends Component {
     createNewStatus = () => {
         let { title } = this.state;
         this.setState({ title: '' });
-
         this.props.createStatus(title);
+
+        this.props.getStatuses().then(response => {
+            console.log(response);
+            this.props.saveStatuses(response.data.data);
+        }).catch(err => {
+            console.log(err.response);
+        });
+
+        this.setState( { refr: 1 }, () => {
+            this.props.getTickets(this.props.id, this.state.activePage, this.state.status );
+            this.props.getStatuses().then(response => {
+                console.log(response);
+                this.props.saveStatuses(response.data.data);
+            }).catch(err => {
+                console.log(err.response);
+            });
+        });
+        this.setState( {refr: null} );
     };
 
 
@@ -85,7 +105,10 @@ const mapDispatchToProps = {
     saveToken,
     saveFirstName,
     saveProjectId,
-    createStatus
+    createStatus,
+    getStatuses,
+    saveStatuses,
+    getTickets
 }
 
 const mapStateToProps = (state) => ({

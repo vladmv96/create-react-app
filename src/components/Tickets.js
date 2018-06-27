@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { savePermalink, saveToken, saveFirstName, saveProjectId, saveStatuses, getStatuses, getTickets, changeStatus } from '../actions/auth_actions';
+import { savePermalink, saveToken, saveFirstName, saveProjectId, saveStatuses, getStatuses, getTickets, changeStatus, saveTickets } from '../actions/auth_actions';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
@@ -36,11 +36,12 @@ class Tickets extends Component {
             tickets: '',
             activePage: 1,
             count: '',
-            status: '',
+            status: 'novyi',
             anchorEl: null,
             anchorElCh: null,
             updBol: true,
-            ticketId: null
+            ticketId: null,
+            selectedStatus: 'Новый'
         }
     }
 
@@ -95,7 +96,7 @@ class Tickets extends Component {
 
     renderStatusesToFilter = (item, index) => {
         return (
-            <MenuItem onClick={this.handleStatusFilterElementClick.bind(this, item.permalink)} key={index}> {item.title} </MenuItem>
+            <MenuItem onClick={this.handleStatusFilterElementClick.bind(this, item)} key={index}> {item.title} </MenuItem>
         )
     }
 
@@ -106,12 +107,13 @@ class Tickets extends Component {
     }
 
     handlePageChange = (pageNumber) => {
-        this.setState({ 'activePage': pageNumber }, () => {
+        this.setState({ activePage: pageNumber }, () => {
             this.getTickets()
         });
     }
 
     getStatuses = () => {
+        console.log('ale');
         this.props.getStatuses().then(response => {
             console.log(response);
             this.props.saveStatuses(response.data.data);
@@ -131,10 +133,12 @@ class Tickets extends Component {
         });
     };
 
-    handleStatusFilterElementClick = (permalink) => {
-        this.setState({ 'status': permalink, 'anchorEl': null }, () => {
+    handleStatusFilterElementClick = (item) => {
+
+        this.setState({ 'activePage': 1, 'status': item.permalink, 'anchorEl': null }, () => {
             this.getTickets()
         });
+        this.setState({ selectedStatus: item.title})
     };
 
     handleStatusChangeClick = (id, event) => {
@@ -155,6 +159,7 @@ class Tickets extends Component {
                 let count = response.data.data.count;
                 let tickets = response.data.data.results;
                 this.setState({ 'count': count, 'tickets': tickets });
+                this.props.saveTickets(tickets);
             }).catch(err => {
               console.log(err.response);
             })
@@ -174,9 +179,10 @@ class Tickets extends Component {
     }
 
     render() {
-        const { tickets } = this.state;
+        const { tickets } = this.props;
         const { anchorEl } = this.state;
         const { classes } = this.props;
+        const { statuses } = this.props;
 
 
         return (
@@ -198,9 +204,12 @@ class Tickets extends Component {
                     onClose={this.handleStatusFilterClose}
                 >
 
-                    {this.props.statuses.map(this.renderStatusesToFilter)}
+                    {console.log(this.props.statuses)}
+                    {statuses.map(this.renderStatusesToFilter)}
 
                 </Menu>
+
+                
 
                 <Popup
                     trigger={<Button style={{ margin: '10px' }} color="primary" aria-label="add" className={classes.button} >
@@ -259,6 +268,7 @@ class Tickets extends Component {
                 
                 <br />
                 <h1>Tickets list</h1>
+                <h3> Status: {this.state.selectedStatus} </h3>
                 {tickets.length !== 0 &&
                     <Paper className={classes.root}><Table className={classes.table}><TableHead>
                         <TableRow>
@@ -298,7 +308,8 @@ const mapDispatchToProps = {
     saveStatuses,
     getStatuses,
     getTickets,
-    changeStatus
+    changeStatus,
+    saveTickets
 }
 
 const mapStateToProps = (state) => ({
@@ -306,7 +317,8 @@ const mapStateToProps = (state) => ({
     token: state.auth.token,
     first_name: state.auth.first_name,
     permalink: state.auth.permalink,
-    statuses: state.auth.statuses
+    statuses: state.auth.statuses,
+    tickets: state.auth.tickets
 })
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Tickets));
