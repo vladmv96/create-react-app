@@ -6,9 +6,8 @@ import { withStyles } from '@material-ui/core/styles';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import FormControl from '@material-ui/core/FormControl';
-import axios from 'axios';
 import { connect } from 'react-redux';
-import { saveToken, saveFirstName, saveProjectId } from '../actions/auth_actions';
+import { saveToken, saveFirstName, saveProjectId, createTicket } from '../actions/auth_actions';
 
 const styles = theme => ({
     root: {
@@ -52,22 +51,7 @@ class CreateTicket extends Component {
         let { name, phone, email } = this.state;
         this.setState({ name: '', phone: '', email: '' });
 
-        axios({
-            url: `https://api.evys.ru/admin2/project/${this.props.id}/tickets`,
-            method: 'post',
-            headers: { 'Authorization': `Basic ${this.props.token}`, 'Account-Name': this.props.permalink },
-            data: {
-                'name': name,
-                'phone': phone,
-                'email': email
-            }
-        })
-            .then(response => {
-                console.log(response);
-            })
-            .catch(err => {
-                console.log(err.response);
-            });
+        this.props.createTicket(this.props.id, name, phone, email)
     };
 
 
@@ -127,7 +111,8 @@ class CreateTicket extends Component {
 const mapDispatchToProps = {
     saveToken,
     saveFirstName,
-    saveProjectId
+    saveProjectId,
+    createTicket
 }
 
 const mapStateToProps = (state) => ({

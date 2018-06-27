@@ -7,6 +7,12 @@ export const GET_PROJECTS = 'GET_PROJECTS'
 export const GET_DATA = 'GET_DATA'
 export const GET_STATUSES = 'GET_STATUSES'
 export const GET_ACCOUNTS = 'GET_ACCOUNTS'
+export const CREATE_STATUS = 'CREATE_STATUS'
+export const CREATE_TICKET = 'CREATE_TICKET'
+export const DELETE_STATUS = 'DELETE_STATUS'
+export const GET_TICKETS = 'GET_TICKETS'
+export const CHANGE_STATUS = 'CHANGE_STATUS'
+
 
 const initialState = {
     token: '',
@@ -35,6 +41,16 @@ export default function (state = initialState, action) {
         case GET_STATUSES:
             return { ...state}
         case GET_ACCOUNTS:
+            return { ...state}
+        case CREATE_STATUS:
+            return { ...state}
+        case CREATE_TICKET:
+            return { ...state}
+        case DELETE_STATUS:
+            return { ...state}
+        case GET_TICKETS:
+            return { ...state}
+        case CHANGE_STATUS:
             return { ...state}
         default:
             return state

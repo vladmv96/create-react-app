@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 import { connect } from 'react-redux';
-import { savePermalink, saveToken, saveFirstName, saveProjectId, saveStatuses, getStatuses } from '../actions/auth_actions';
+import { savePermalink, saveToken, saveFirstName, saveProjectId, saveStatuses, getStatuses, getTickets, changeStatus } from '../actions/auth_actions';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
@@ -14,6 +13,7 @@ import AddIcon from '@material-ui/icons/Add';
 import Popup from 'reactjs-popup';
 import CreateTicket from './CreateTicket';
 import CreateStatus from './CreateStatus';
+import DeleteStatus from './DeleteStatus';
 import Pagination from "react-js-pagination";
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -55,11 +55,13 @@ class Tickets extends Component {
     componentWillMount = () => {
         this.getStatuses();
         this.getTickets();
+        console.log(this.props.statuses);
     }
 
     shouldComponentUpdate = () => {
         return this.state.updBol;
     }
+
 
     renderItem = (item, index) => {
         return (
@@ -146,32 +148,22 @@ class Tickets extends Component {
     };
 
     getTickets = () => {
-        axios({
-            url: `https://api.evys.ru/admin2/project/${this.props.id}/tickets`,
-            method: 'get',
-            headers: { 'Authorization': `Basic ${this.props.token}`, 'Account-Name': this.props.permalink },
-            params: { page: this.state.activePage, status: this.state.status }
-        })
-            .then(response => {
+
+        this.props.getTickets(this.props.id, this.state.activePage, this.state.status ).then(
+            response => {
                 console.log(response.data.data.results);
                 let count = response.data.data.count;
                 let tickets = response.data.data.results;
                 this.setState({ 'count': count, 'tickets': tickets });
+            }).catch(err => {
+              console.log(err.response);
+            })
 
-            })
-            .catch(err => {
-                console.log(err.response);
-            })
     }
 
     changeStatus = (permalink, ticketId) => {
 
-        axios({
-            url: `https://api.evys.ru/admin2/ticket/${ticketId}`,
-            method: 'put',
-            headers: { 'Authorization': `Basic ${this.props.token}`, 'Account-Name': this.props.permalink },
-            data: { status: permalink }
-        }).then(response => {
+        this.props.changeStatus(ticketId, permalink).then(response => {
             console.log(response);
             this.getTickets();
         });
@@ -211,7 +203,7 @@ class Tickets extends Component {
                 </Menu>
 
                 <Popup
-                    trigger={<Button style={{ margin: '10px' }} color="primary" aria-label="add" className={classes.button}>
+                    trigger={<Button style={{ margin: '10px' }} color="primary" aria-label="add" className={classes.button} >
                         Create new status
                 </Button>}
                     modal
@@ -224,6 +216,24 @@ class Tickets extends Component {
                         </a>
                             <br />
                             <CreateStatus />
+                        </div>
+                    )}
+                </Popup>
+
+                <Popup
+                    trigger={<Button style={{ margin: '10px' }} color="secondary" aria-label="add" className={classes.button}>
+                        Delete status
+                </Button>}
+                    modal
+                    closeOnDocumentClick
+                >
+                    {close => (
+                        <div>
+                            <a className="close" style={{ float: 'right' }} onClick={close}>
+                                &times;
+                        </a>
+                            <br />
+                            <DeleteStatus />
                         </div>
                     )}
                 </Popup>
@@ -245,6 +255,8 @@ class Tickets extends Component {
                         </div>
                     )}
                 </Popup>
+
+                
                 <br />
                 <h1>Tickets list</h1>
                 {tickets.length !== 0 &&
@@ -284,7 +296,9 @@ const mapDispatchToProps = {
     saveFirstName,
     saveProjectId,
     saveStatuses,
-    getStatuses
+    getStatuses,
+    getTickets,
+    changeStatus
 }
 
 const mapStateToProps = (state) => ({
