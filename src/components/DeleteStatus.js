@@ -39,11 +39,16 @@ class DeleteStatus extends Component {
 
     deleteStatus = (id) => {
 
+        console.log(this.props.selectedStatusId)
+
+        if ( id !== this.props.selectedStatusId) {
+
         this.props.deleteStatus(id).then(() => {
             this.props.getStatuses().then(response => {
             this.props.saveStatuses(response.data.data);
         })
         });
+    } else { console.log('Status is selected') }
 
     }
 

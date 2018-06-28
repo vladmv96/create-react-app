@@ -41,7 +41,8 @@ class Tickets extends Component {
             anchorElCh: null,
             updBol: true,
             ticketId: null,
-            selectedStatus: 'Новый'
+            selectedStatus: 'Новый',
+            selectedStatusId: 1
         };
         this.getStatuses();
         this.getTickets();
@@ -137,7 +138,8 @@ class Tickets extends Component {
         this.setState({ 'activePage': 1, 'status': item.permalink, 'anchorEl': null }, () => {
             this.getTickets()
         });
-        this.setState({ selectedStatus: item.title})
+        this.setState({ selectedStatus: item.title});
+        this.setState({ selectedStatusId: item.id});
     };
 
     handleStatusChangeClick = (id, event) => {
@@ -246,7 +248,7 @@ class Tickets extends Component {
                                 &times;
                         </a>
                             <br />
-                            <DeleteStatus />
+                            <DeleteStatus selectedStatusId={this.state.selectedStatusId} />
                         </div>
                     )}
                 </Popup>
