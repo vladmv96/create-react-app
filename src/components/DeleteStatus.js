@@ -39,7 +39,13 @@ class DeleteStatus extends Component {
 
     deleteStatus = (id) => {
 
-        this.props.deleteStatus(id);
+        this.props.deleteStatus(id).then(() => {
+            this.props.getStatuses().then(response => {
+            this.props.saveStatuses(response.data.data);
+        })
+
+
+        });
 
         this.props.getStatuses().then(response => {
             this.props.saveStatuses(response.data.data);
@@ -48,10 +54,6 @@ class DeleteStatus extends Component {
     }
 
     render() {
-
-        this.props.getStatuses().then(response => {
-            this.props.saveStatuses(response.data.data);
-        })
 
 
         return (
