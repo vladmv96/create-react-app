@@ -154,15 +154,11 @@ class Tickets extends Component {
 
     getTickets = () => {
 
-        console.log('ale');
-
         this.props.getTickets(this.props.id, this.state.activePage, this.state.status ).then(
             response => {
                 console.log(response.data.data.results);
                 console.log(response.data.data.count);
                 this.setState({'count': response.data.data.count})
-              //  this.props.saveCount(response.data.data.count);
-               // console.log(this.props.count);
                 this.props.saveTickets(response.data.data.results);
             }).catch(err => {
               console.log(err.response);
@@ -170,6 +166,10 @@ class Tickets extends Component {
 
 
     }
+
+    updateCount = (value) => {
+        this.setState({ 'count': value });
+     }
 
     changeStatus = (permalink, ticketId) => {
 
@@ -248,7 +248,7 @@ class Tickets extends Component {
                                 &times;
                         </a>
                             <br />
-                            <DeleteStatus selectedStatusId={this.state.selectedStatusId} />
+                            <DeleteStatus selectedStatusId={this.state.selectedStatusId} updateCount={this.updateCount} />
                         </div>
                     )}
                 </Popup>
@@ -274,7 +274,6 @@ class Tickets extends Component {
                 
                 <br />
                 <h1>Tickets list</h1>
-                <h3> Status: {this.state.selectedStatus} </h3>
                 {tickets.length !== 0 &&
                     <Paper className={classes.root}><Table className={classes.table}><TableHead>
                         <TableRow>
