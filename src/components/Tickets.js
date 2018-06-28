@@ -35,7 +35,7 @@ class Tickets extends Component {
         this.state = {
             tickets: '',
             activePage: 1,
-            count: '',
+            count: null,
             status: 'novyi',
             anchorEl: null,
             anchorElCh: null,
@@ -157,8 +157,10 @@ class Tickets extends Component {
         this.props.getTickets(this.props.id, this.state.activePage, this.state.status ).then(
             response => {
                 console.log(response.data.data.results);
-                this.props.saveCount(response.data.data.count);
-                this.props.saveTickets(response.data.data.results);
+                console.log(response.data.data.count);
+                this.setState({'count': response.data.data.count})
+              //  this.props.saveCount(response.data.data.count);
+               // console.log(this.props.count);
                 this.props.saveTickets(response.data.data.results);
             }).catch(err => {
               console.log(err.response);
@@ -184,6 +186,7 @@ class Tickets extends Component {
         const { anchorEl } = this.state;
         const { classes } = this.props;
         const { statuses } = this.props;
+        const { count } = this.state;
 
 
         return (
@@ -290,8 +293,8 @@ class Tickets extends Component {
                     hideNavigation
                     activePage={this.state.activePage}
                     itemsCountPerPage={20}
-                    totalItemsCount={this.props.count * 20}
-                    pageRangeDisplayed={this.props.count}
+                    totalItemsCount={count * 20}
+                    pageRangeDisplayed={count}
                     onChange={this.handlePageChange}
                 />
             </div>
