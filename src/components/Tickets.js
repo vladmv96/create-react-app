@@ -57,6 +57,7 @@ class Tickets extends Component {
         this.getStatuses();
         this.getTickets();
         console.log(this.props.statuses);
+        this.setState( { tickets: this.props.tickets } )
     }
 
     shouldComponentUpdate = () => {
@@ -179,7 +180,7 @@ class Tickets extends Component {
     }
 
     render() {
-        const { tickets } = this.props;
+        const { tickets } = this.state;
         const { anchorEl } = this.state;
         const { classes } = this.props;
         const { statuses } = this.props;
@@ -269,7 +270,7 @@ class Tickets extends Component {
                 <br />
                 <h1>Tickets list</h1>
                 <h3> Status: {this.state.selectedStatus} </h3>
-                {this.state.tickets.length !== 0 &&
+                {tickets.length !== 0 &&
                     <Paper className={classes.root}><Table className={classes.table}><TableHead>
                         <TableRow>
                             <TableCell>Name</TableCell>
