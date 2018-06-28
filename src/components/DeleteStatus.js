@@ -68,6 +68,7 @@ class DeleteStatus extends Component {
 
     render() {
 
+
         return (
             <div>
 

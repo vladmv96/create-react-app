@@ -269,7 +269,7 @@ class Tickets extends Component {
                 <br />
                 <h1>Tickets list</h1>
                 <h3> Status: {this.state.selectedStatus} </h3>
-                {tickets.length !== 0 &&
+                {this.state.tickets.length !== 0 &&
                     <Paper className={classes.root}><Table className={classes.table}><TableHead>
                         <TableRow>
                             <TableCell>Name</TableCell>
