@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { savePermalink, saveToken, saveFirstName, saveProjectId, saveStatuses, getStatuses, getTickets, changeStatus, saveTickets } from '../actions/auth_actions';
+import { savePermalink, saveToken, saveFirstName, saveProjectId, saveStatuses, getStatuses, getTickets, changeStatus, saveTickets, saveCount } from '../actions/auth_actions';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 import Table from '@material-ui/core/Table';
@@ -42,7 +42,9 @@ class Tickets extends Component {
             updBol: true,
             ticketId: null,
             selectedStatus: 'Новый'
-        }
+        };
+        this.getStatuses();
+        this.getTickets();
     }
 
 
@@ -53,11 +55,8 @@ class Tickets extends Component {
         this.props.history.push('/login');
     }
 
-    componentWillMount = () => {
-        this.getStatuses();
-        this.getTickets();
+    UNSAFE_componentWillMount = () => {
         console.log(this.props.statuses);
-        this.setState( { tickets: this.props.tickets } )
     }
 
     shouldComponentUpdate = () => {
@@ -114,7 +113,6 @@ class Tickets extends Component {
     }
 
     getStatuses = () => {
-        console.log('ale');
         this.props.getStatuses().then(response => {
             console.log(response);
             this.props.saveStatuses(response.data.data);
@@ -154,16 +152,18 @@ class Tickets extends Component {
 
     getTickets = () => {
 
+        console.log('ale');
+
         this.props.getTickets(this.props.id, this.state.activePage, this.state.status ).then(
             response => {
                 console.log(response.data.data.results);
-                let count = response.data.data.count;
-                let tickets = response.data.data.results;
-                this.setState({ 'count': count, 'tickets': tickets });
-                this.props.saveTickets(tickets);
+                this.props.saveCount(response.data.data.count);
+                this.props.saveTickets(response.data.data.results);
+                this.props.saveTickets(response.data.data.results);
             }).catch(err => {
               console.log(err.response);
             })
+
 
     }
 
@@ -290,8 +290,8 @@ class Tickets extends Component {
                     hideNavigation
                     activePage={this.state.activePage}
                     itemsCountPerPage={20}
-                    totalItemsCount={this.state.count * 20}
-                    pageRangeDisplayed={this.state.count}
+                    totalItemsCount={this.props.count * 20}
+                    pageRangeDisplayed={this.props.count}
                     onChange={this.handlePageChange}
                 />
             </div>
@@ -310,7 +310,8 @@ const mapDispatchToProps = {
     getStatuses,
     getTickets,
     changeStatus,
-    saveTickets
+    saveTickets,
+    saveCount
 }
 
 const mapStateToProps = (state) => ({

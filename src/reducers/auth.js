@@ -13,6 +13,7 @@ export const DELETE_STATUS = 'DELETE_STATUS'
 export const GET_TICKETS = 'GET_TICKETS'
 export const CHANGE_STATUS = 'CHANGE_STATUS'
 export const SAVE_TICKETS_ACTION = 'SAVE_TICKETS_ACTION'
+export const SAVE_COUNT_ACTION = 'SAVE_COUNT_ACTION'
 
 
 const initialState = {
@@ -20,7 +21,9 @@ const initialState = {
     permalink: '',
     first_name: '',
     id: '',
-    statuses: []
+    statuses: [],
+    tickets: [],
+    count: null
 }
 
 export default function (state = initialState, action) {
@@ -55,6 +58,8 @@ export default function (state = initialState, action) {
             return { ...state}
         case SAVE_TICKETS_ACTION:
             return { ...state, tickets: action.tickets }
+        case SAVE_COUNT_ACTION:
+            return { ...state, count: action.count }
         default:
             return state
     }

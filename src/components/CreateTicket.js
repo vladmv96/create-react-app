@@ -55,13 +55,21 @@ class CreateTicket extends Component {
         this.setState({ name: '', phone: '', email: '' });
 
         this.props.createTicket(this.props.id, name, phone, email);
-        
-        this.props.getTickets(this.props.id, this.state.activePage, this.state.status ).then(
+
+        this.props.getTickets(this.props.id, this.state.activePage, this.state.status).then(
             response => {
                 console.log(response.data.data.results);
-                let tickets = response.data.data.results;
-                this.props.saveTickets(tickets);
+                this.props.saveTickets(response.data.data.results);
             })
+
+        this.setState({ refr: 1 }, () => {
+            this.props.getTickets(this.props.id, this.state.activePage, this.state.status).then(
+                response => {
+                    console.log(response.data.data.results);
+                    this.props.saveTickets(response.data.data.results);
+                })
+        });
+        this.setState({ refr: null });
 
     };
 

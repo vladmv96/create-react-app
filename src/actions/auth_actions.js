@@ -1,4 +1,4 @@
-import { SAVE_TOKEN_ACTION, SAVE_ACCOUNT_ACTION, SAVE_FIRSTNAME_ACTION, SAVE_PROJECT_ID, SAVE_STATUSES, GET_PROJECTS, GET_DATA, GET_STATUSES, GET_ACCOUNTS, CREATE_STATUS, CREATE_TICKET, DELETE_STATUS, GET_TICKETS, CHANGE_STATUS, SAVE_TICKETS_ACTION } from '../reducers/auth';
+import { SAVE_TOKEN_ACTION, SAVE_ACCOUNT_ACTION, SAVE_FIRSTNAME_ACTION, SAVE_PROJECT_ID, SAVE_STATUSES, GET_PROJECTS, GET_DATA, GET_STATUSES, GET_ACCOUNTS, CREATE_STATUS, CREATE_TICKET, DELETE_STATUS, GET_TICKETS, CHANGE_STATUS, SAVE_TICKETS_ACTION, SAVE_COUNT_ACTION } from '../reducers/auth';
 
 export function saveToken(token) {
     return { type: SAVE_TOKEN_ACTION, token }
@@ -70,4 +70,8 @@ export function changeStatus(ticketId, permalink) {
 
 export function saveTickets(tickets) {
     return { type: SAVE_TICKETS_ACTION, tickets }
+}
+
+export function saveCount(count) {
+    return { type: SAVE_COUNT_ACTION, count }
 }
