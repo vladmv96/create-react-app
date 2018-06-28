@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import { withStyles } from '@material-ui/core/styles';
-import { deleteStatus, getTickets, getStatuses, saveStatuses } from '../actions/auth_actions';
+import { deleteStatus, getStatuses, saveStatuses } from '../actions/auth_actions';
 
 
 
@@ -21,21 +21,18 @@ class DeleteStatus extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            activePage: 1,
-            status: 'novyi',
-            refr: null
         }
     }
-    
+
 
 
     renderStatuses = (item, index) => {
         return (
             <div key={index}>
                 <br />
-            <Button style={{ margin: '10px' }} color="secondary" aria-label="add" className={this.props.classes.button} onClick={this.deleteStatus.bind(this, item.id)}> 
-            {item.title} 
-            </Button>
+                <Button style={{ margin: '10px' }} color="secondary" aria-label="add" className={this.props.classes.button} onClick={this.deleteStatus.bind(this, item.id)}>
+                    {item.title}
+                </Button>
             </div>
         )
     }
@@ -47,22 +44,7 @@ class DeleteStatus extends Component {
         this.props.getStatuses().then(response => {
             console.log(response);
             this.props.saveStatuses(response.data.data);
-        }).catch(err => {
-            console.log(err.response);
-        });
-
-        this.setState({ refr: 1 }, () => {
-            this.props.getTickets(this.props.id, this.state.activePage, this.state.status );
-
-            this.props.getStatuses().then(response => {
-                console.log(response);
-                this.props.saveStatuses(response.data.data);
-            }).catch(err => {
-                console.log(err.response);
-            });
-        });
-
-        this.setState({refr: null});
+        })
 
     }
 
@@ -86,15 +68,11 @@ class DeleteStatus extends Component {
 }
 
 const mapStateToProps = (state) => ({
-    id: state.auth.id,
-    token: state.auth.token,
-    permalink: state.auth.permalink,
     statuses: state.auth.statuses
 })
 
 const mapDispatchToProps = {
     deleteStatus,
-    getTickets,
     getStatuses,
     saveStatuses
 }
