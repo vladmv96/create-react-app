@@ -47,27 +47,16 @@ class CreateTicket extends Component {
     createNewStatus = () => {
         let { title } = this.state;
         this.setState({ title: '' });
-        this.props.createStatus(title);
-
-
-        this.props.getStatuses().then(response => {
+        this.props.createStatus(title).then(() => {
+            this.props.getStatuses().then(response => {
             console.log(response);
             this.props.saveStatuses(response.data.data);
         }).catch(err => {
             console.log(err.response);
         });
-        this.props.getTickets(this.props.id, this.state.activePage, this.state.status );
 
-        this.setState( { refr: 1 }, () => {
-            this.props.getTickets(this.props.id, this.state.activePage, this.state.status );
-            this.props.getStatuses().then(response => {
-                console.log(response);
-                this.props.saveStatuses(response.data.data);
-            }).catch(err => {
-                console.log(err.response);
-            });
         });
-        this.setState( {refr: null} );
+
     };
 
 
