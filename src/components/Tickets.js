@@ -180,7 +180,7 @@ class Tickets extends Component {
     }
 
     render() {
-        const { tickets } = this.state;
+        const { tickets } = this.props;
         const { anchorEl } = this.state;
         const { classes } = this.props;
         const { statuses } = this.props;
