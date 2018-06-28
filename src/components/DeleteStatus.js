@@ -42,13 +42,16 @@ class DeleteStatus extends Component {
         this.props.deleteStatus(id);
 
         this.props.getStatuses().then(response => {
-            console.log(response);
             this.props.saveStatuses(response.data.data);
         })
 
     }
 
     render() {
+
+        this.props.getStatuses().then(response => {
+            this.props.saveStatuses(response.data.data);
+        })
 
 
         return (
